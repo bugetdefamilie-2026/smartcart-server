@@ -79,11 +79,12 @@ async function fetchLidlProducts() {
 
       const name     = get('denumire', 'name', 'produs', 'articol', 'description') || `Produs #${i + 1}`;
       const price    = parseFloat(String(get('pret', 'price', 'valoare', 'tarif')).replace(',', '.')) || 0;
-      const unit     = get('unitate', 'unit', 'um', 'cantitate') || '';
+      // 'Gramaj' is column B in the LIDL file — the weight/volume string e.g. "500 g", "1 l"
+      const gramaj   = String(get('gramaj', 'greutate', 'cantitate', 'unitate', 'unit', 'um') || '').trim();
       const category = get('categorie', 'category', 'grupa', 'departament') || '';
       const barcode  = get('cod', 'ean', 'barcode', 'codbare') || '';
 
-      return { id: i + 1, name, price, unit, category, barcode };
+      return { id: i + 1, name, price, gramaj, category, barcode };
     })
     .filter(p => p.name && p.price > 0);    // remove rows with no name or zero price
 
