@@ -58,7 +58,10 @@ async function fetchLidlProducts() {
   const rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
 
   console.log(`[LIDL] Parsed ${rows.length} rows. Inspecting first row…`);
-  if (rows.length > 0) console.log('[LIDL] Columns found:', Object.keys(rows[0]));
+  if (rows.length > 0) {
+    console.log('[LIDL] Columns found:', Object.keys(rows[0]));
+    console.log('[LIDL] First row sample:', JSON.stringify(rows[0]));
+  }
 
   // ── Normalise rows ──────────────────────────────────────────
   // We don't know the exact column names until we see the file live.
@@ -79,8 +82,9 @@ async function fetchLidlProducts() {
 
       const name     = get('denumire', 'name', 'produs', 'articol', 'description') || `Produs #${i + 1}`;
       const price    = parseFloat(String(get('pret', 'price', 'valoare', 'tarif')).replace(',', '.')) || 0;
-      // 'Gramaj' is column B in the LIDL file — the weight/volume string e.g. "500 g", "1 l"
-      const gramaj   = String(get('gramaj', 'greutate', 'cantitate', 'unitate', 'unit', 'um') || '').trim();
+      // Column B in the LIDL file is strictly named "Gramaj" — search only for that exact word
+      // We deliberately avoid 'um', 'unitate', 'cantitate' because they substring-match 'Denumire'
+      const gramaj   = String(get('gramaj', 'greutate', 'weight', 'volum') || '').trim();
       const category = get('categorie', 'category', 'grupa', 'departament') || '';
       const barcode  = get('cod', 'ean', 'barcode', 'codbare') || '';
 
