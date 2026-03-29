@@ -1,16 +1,16 @@
 {
   "name": "smartcart-lidl-proxy",
-  "version": "1.0.0",
-  "description": "Proxy server that downloads, parses and caches the daily LIDL .xlsb price file",
+  "version": "2.0.0",
+  "description": "Proxy server for LIDL (cache) + Auchan (live search)",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "dependencies": {
+    "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "node-fetch": "^2.7.0",
