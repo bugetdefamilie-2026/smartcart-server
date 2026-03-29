@@ -80,11 +80,19 @@ async function fetchLidlProducts() {
         return '';
       };
 
-      const name     = get('denumire', 'name', 'produs', 'articol', 'description') || `Produs #${i + 1}`;
+      // ── Name: strip leading junk prefixes from LIDL file e.g. "- ", "-BUC_"
+      const rawName  = String(get('denumire', 'name', 'produs', 'articol', 'description') || `Produs #${i + 1}`);
+      const name     = rawName
+        .replace(/^\s*-\s*BUC_\s*/i, '')   // " -BUC_ " at start
+        .replace(/^\s*-\s+/,         '')   // " - " at start (dash followed by space)
+        .trim();
+
       const price    = parseFloat(String(get('pret', 'price', 'valoare', 'tarif')).replace(',', '.')) || 0;
-      // Column B in the LIDL file is strictly named "Gramaj" — search only for that exact word
-      // We deliberately avoid 'um', 'unitate', 'cantitate' because they substring-match 'Denumire'
-      const gramaj   = String(get('gramaj', 'greutate', 'weight', 'volum') || '').trim();
+
+      // Column B is "Gramaj". Special case: "per kg" / "kg" alone = 1000 g (price is per kg, package = 1 kg)
+      const rawGramaj = String(get('gramaj', 'greutate', 'weight', 'volum') || '').trim();
+      const gramaj    = /^per\s*kg$/i.test(rawGramaj) ? '1 kg' : rawGramaj;
+
       const category = get('categorie', 'category', 'grupa', 'departament') || '';
       const barcode  = get('cod', 'ean', 'barcode', 'codbare') || '';
 
