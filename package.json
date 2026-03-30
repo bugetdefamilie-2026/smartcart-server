@@ -1,7 +1,7 @@
 {
   "name": "smartcart-lidl-proxy",
-  "version": "2.0.0",
-  "description": "Proxy server for LIDL (cache) + Auchan (live search)",
+  "version": "2.1.0",
+  "description": "Proxy server for LIDL (cache) + Auchan (live search) + Kaufland (catalog PDF)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
@@ -10,11 +10,11 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "pdf-parse": "^1.1.1",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "node-fetch": "^2.7.0",
+    "pdf-parse": "^1.1.1",
     "xlsx": "^0.18.5"
   }
 }
